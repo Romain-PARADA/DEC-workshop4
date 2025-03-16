@@ -1,0 +1,1 @@
+{"root":["../src/config.ts","../src/crypto.ts","../src/index.ts","../src/start.ts","../src/onionrouters/launchonionrouters.ts","../src/onionrouters/simpleonionrouter.ts","../src/registry/registry.ts","../src/users/launchusers.ts","../src/users/user.ts"],"version":"5.8.2"}
