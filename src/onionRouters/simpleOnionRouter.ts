@@ -13,11 +13,11 @@ export async function simpleOnionRouter(nodeId: number) {
   let lastReceivedDecryptedMessage: string | null = null;
   let lastMessageDestination: number | null = null;
 
-  // Générer une paire de clés pour ce routeur
+  // Générer une keypair pour ce routeur
   const keyPair = await generateRsaKeyPair();
   const publicKey = await exportPubKey(keyPair.publicKey);
 
-  // Enregistrer le nœud auprès du registry
+  // Enregistre le nœud au registry
   await fetch(`http://localhost:${REGISTRY_PORT}/registerNode`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -54,14 +54,14 @@ export async function simpleOnionRouter(nodeId: number) {
     lastReceivedEncryptedMessage = message;
 
     try {
-      // Extraire la clé symétrique chiffrée (344 premiers caractères)
+      // Extraire clé symétrique chiffrée
       const encryptedSymKey = message.substring(0, 344);
       const encryptedMessage = message.substring(344);
 
-      // Déchiffrer la clé symétrique avec la clé privée RSA
+      // Déchiffre la clé symétrique avecclé RSA
       const symKey = await rsaDecrypt(encryptedSymKey, keyPair.privateKey);
       
-      // Déchiffrer le message avec la clé symétrique
+      // Déchiffrer le message avec clé symétrique
       const decrypted = await symDecrypt(symKey, encryptedMessage);
       lastReceivedDecryptedMessage = decrypted;
 
@@ -69,10 +69,10 @@ export async function simpleOnionRouter(nodeId: number) {
       const destinationStr = decrypted.substring(0, 10);
       lastMessageDestination = parseInt(destinationStr);
 
-      // Le reste est le message pour la destination
+      // Le reste est le message
       const messageForDestination = decrypted.substring(10);
 
-      // Transmettre le message à la destination
+      // Transmettre le message
       if (lastMessageDestination) {
         await fetch(`http://localhost:${lastMessageDestination}/message`, {
           method: 'POST',
